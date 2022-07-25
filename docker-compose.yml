@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  nextjs:
+    container_name: nextjs
+    build:
+      context: ./nextjs
+      dockerfile: Dockerfile
+    environment:
+      ENV_VARIABLE: ${ENV_VARIABLE}
+      NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    volumes:
+      - ./nextjs:/app
+      # - /app/node_modules
+      # - /app/.next
+      # - ./nextjs/src:/app/src
+      # - ./nextjs/pages:/app/pages
+      # - ./nextjs/public:/app/public
+    restart: always
+    ports:
+      - 3000:3000
+      - 5555:5555
+    networks:
+      - fullstackstarter
+
+  # Add more containers below (nginx, postgres, etc.)
+  # https://github.com/docker/awesome-compose/tree/master/postgresql-pgadmin
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+      - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_USER)
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+    - db
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+    ports:
+      - "5050:80"
+    restart: always
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+networks:
+  fullstackstarter:
+    external: true

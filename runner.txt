@@ -1,0 +1,7 @@
+# Docker file watcher reload
+docker-compose -f docker-compose.yml -f docker-compose-reload.yml up
+docker-compose -f docker-compose.yml -f docker-compose-reload.yml down -v
+
+
+# To Run Interactive console inside docker 
+docker exec -it nextjs /bin/sh
